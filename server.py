@@ -1,12 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime  # Import the datetime module
 
 app = Flask(__name__)
 
-# Store submitted data with timestamp
 user_data = []
-
-# Password for secure-clear
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -16,7 +13,7 @@ def index():
         question_one = request.form['question_one']
         question_two = request.form['question_two']
 
-        # Validate A number and Answer
+        # Validate A number and Responses
         if a_number.lower().startswith('a') and question_one.isdigit() and question_two.isdigit():
             # Get the current timestamp
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -31,9 +28,10 @@ def index():
 
             return redirect(url_for('index'))
         else:
-            return "Invalid input. A number must start with 'A' or 'a', and Both Answer must be a number."
+            return "Invalid input. A number must start with 'A' or 'a', and Both Responses must be valid numerical values."
 
-    return render_template('index.html', users=user_data)
+    return render_template('index.html', user_data=user_data)
+
 
 @app.route('/summary')
 def summary():
@@ -48,11 +46,9 @@ def secure_summary():
 
 @app.route('/secure-clear')
 def secure_clear():
-
-        # Check if the provided password is correct
-            # Clear user_data
-            user_data.clear()
-            return redirect(url_for('index'))
+    global user_data
+    user_data = []
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=False)
